@@ -1,5 +1,5 @@
 import useEChartsInstance from './useEChartsInstance'
-import { EChartsInitOpts } from '@/typings/GridProps'
+import { EChartsInitOpts } from '@/typings/UniversalProps'
 import { ECharts } from 'echarts/core'
 
 const { init } = useEChartsInstance()
@@ -30,7 +30,7 @@ export default function () {
     return sizeObj
   }
 
-  const initEChartsInstance = (instanceId: string, dom?: HTMLElement,  theme?: string | object, initOpts?: EChartsInitOpts) => {
+  const initEChartsInstance = (instanceId: string, dom?: HTMLElement, theme?: string | object, initOpts?: EChartsInitOpts) => {
     if (dom) {
       return init(dom, instanceId, theme, initOpts)
     }

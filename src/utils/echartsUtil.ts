@@ -1,17 +1,27 @@
-import { DataType, SeriesExtraSettings } from '@/typings/ChartsProps'
-import { deepClone } from '@/utils/commonUtils'
+import { cloneDeep } from 'lodash-unified'
+import { XAxisSetting, YAxisSetting } from '@/typings/ChartsProps'
 
-type GridSeriesType = 'line' | 'bar' | 'scatter'
-
-
-function getGridSeries(type: GridSeriesType, data: DataType, extra?: SeriesExtraSettings[]) {
-  const series: any[] = []
-  Object.keys(data).forEach((dimension: string, index: number) => {
-    const _series = {
-      data: data[dimension]
+function getCategoryAxis(dimensions: unknown[][], settings?: XAxisSetting | YAxisSetting | (XAxisSetting | YAxisSetting)[]) {
+  const axis: unknown[] = []
+  dimensions.forEach((d, i) => {
+    const tempAxis = {
+      type: 'category',
+      data: d
     }
-    if (Array.isArray(extra)) {
-      
+    
+    if (Array.isArray(settings) && settings[i]) {
+      Object.assign(tempAxis, cloneDeep(settings[i]))
+    } else if (settings) {
+      Object.assign(tempAxis, cloneDeep(settings))
     }
+
+    axis.push(tempAxis)
   })
+
+  return axis
+}
+
+
+export {
+  getCategoryAxis
 }

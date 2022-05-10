@@ -1,51 +1,89 @@
-import type { Data, AxisType, AxisSettings } from "@/typings/ChartsProps"
-import { LineSeriesOption } from 'echarts/charts'
-import { EChartsOption } from "echarts/types/dist/shared"
+import type { LineChartHandlerData } from './types'
+import type { SeriesOption, EChartsOption } from '@/typings/ChartsProps'
+import { getCategoryAxis } from '@/utils/echartsUtil'
 
-function getBaseAxis(data: Data, axisType: AxisType, dimensionIndex: number = 0) {
-  const { columns, rows } = data
-  if (axisType === 'category') {
-    const dimension = columns[dimensionIndex]
-    const data = rows.map((row) => row[dimension])
+interface Metrics {
+  [k: string]: (string | number)[]
+}
 
-    return {
-      type: 'category',
-      data
-    }
-  } else {
-    return {
-      type: axisType
-    }
+
+function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerData['xAxisType'], axisSettings?: LineChartHandlerData['xAxisSettings']) {
+  switch (axisType) {
+    case 'category':
+      return getCategoryAxis([dimension], axisSettings)
+    default:
+      return {
+        type: axisType
+      }
   }
 }
 
-function getXAxis(data: Data, axisType: AxisType) {
-  const baseAxis = getBaseAxis(data, axisType)
-  return baseAxis
+function getYAxis(dimension: (string | number)[], axisType: LineChartHandlerData['yAxisType'], axisSettings?: LineChartHandlerData['yAxisSettings']) {
+  switch (axisType) {
+    case 'category':
+      return getCategoryAxis([dimension], axisSettings)
+    default:
+      return {
+        type: axisType
+      }
+  }
 }
 
-function getYAxis(data: Data, axisType: AxisType) {
-  const baseAxis = getBaseAxis(data, axisType)
-  return baseAxis
+function getLegend() {
+
 }
 
-function getSeries(data: Data) {
-  const { columns, rows } = data
-  const series: LineSeriesOption[] = []
-  for (let i = 1; i < columns.length; i++) {
-    series.push({
+function getTooltip() {
+
+}
+
+function getAxisPointer(axisPointerType: LineChartHandlerData['axisPointerType'], axisPointerSetting: LineChartHandlerData['axisPointerSetting']) {
+
+}
+
+function getSeries(metrics: Metrics, metricsAlias: LineChartHandlerData['metricsAlias']) {
+  const series: SeriesOption[] = []
+  Object.keys(metrics).forEach((key, i) => {
+    const tempSeries: SeriesOption = {
       type: 'line',
-      data: rows.map((row) => row[columns[i]])
-    })
-  }
-
+      name: metricsAlias ? (metricsAlias[key] || key) : key,
+      data: metrics[key]
+    }
+    series.push(tempSeries)
+  })
   return series
 }
 
-export default function (data: Data, xAxisType: AxisType, yAxisType: AxisType, xAxisSettings?: AxisSettings, yAxisSettings?: AxisSettings) {
-  const xAxis = getXAxis(data, xAxisType)
-  const yAxis = getYAxis(data, yAxisType)
-  const series = getSeries(data)
+export default function(args: LineChartHandlerData) {
+  const { 
+    data,
+    dimensionIndex,
+    metricsAlias,
+    xAxisType,
+    xAxisSettings,
+    yAxisType,
+    yAxisSettings,
+    axisPointerVisible,
+    axisPointerType,
+    axisPointerSetting
+  } = args
 
-  return { xAxis, yAxis, series} as EChartsOption
+  const _dimensionIndex = dimensionIndex || 0
+
+  const dimension = data.rows.map((row) => {
+    return row[data.columns[_dimensionIndex]]
+  })
+
+  const metrics: Metrics = {}
+  data.columns.forEach((col, i) => {
+    if (i !== _dimensionIndex) {
+      metrics[col] = data.rows.map((row) => row[col])
+    }
+  })
+
+  const xAxis = getXAxis(dimension, xAxisType, xAxisSettings)
+  const yAxis = getYAxis(dimension, yAxisType, yAxisSettings)
+  const series = getSeries(metrics, metricsAlias)
+
+  return { xAxis, yAxis, series } as EChartsOption
 }

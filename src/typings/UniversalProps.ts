@@ -1,8 +1,7 @@
-export type PositionSetting = {
-  left?: number | string,
-  top?: number | string,
-  right?: number | string,
-  bottom?: number | string,
-  z?: number,
-  zlevel?: number
+export type EChartsInitOpts = {
+  devicePixelRatio?: number,
+  renderer?: 'canvas' | 'svg',
+  useDirtyRect?: boolean,
+  ssr?: boolean,
+  locale?: string
 }

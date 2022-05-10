@@ -1,7 +1,17 @@
 import { PropType } from 'vue'
-import { GridComponentOption } from 'echarts/components'
-import { Data, AxisType } from '@/typings/ChartsProps'
 import { randomId } from '@/utils'
+import type { 
+  Data,
+  MetricsAlias,
+  AxisType,
+  XAxisSetting,
+  YAxisSetting,
+  AxisPointerSetting,
+  GridSetting,
+  LegendSetting,
+  TooltipSetting
+} from '@/typings/ChartsProps'
+
 
 export default function () {
   return {
@@ -14,7 +24,7 @@ export default function () {
       default: 0
     },
     metricsAlias: {
-      type: Array as PropType<Array<{name: string, alias: string}>>
+      type: Object as PropType<MetricsAlias>
     },
     id: {
       type: String,
@@ -28,8 +38,8 @@ export default function () {
       type: [Number, String],
       default: 300
     },
-    grid: {
-      type: Object as PropType<GridComponentOption>
+    gridSetting: {
+      type: Object as PropType<GridSetting>
     },
     xAxisType: {
       type: String as PropType<AxisType>,
@@ -39,5 +49,44 @@ export default function () {
       type: String as PropType<AxisType>,
       default: 'value'
     },
+    xAxisSettings: {
+      type: Object as PropType<XAxisSetting | Array<XAxisSetting>>
+    },
+    yAxisSettings: {
+      type: Object as PropType<YAxisSetting | Array<YAxisSetting>>
+    },
+    legendVisible: {
+      type: Boolean,
+      default: true
+    },
+    legendType: {
+      type: String as PropType<'plain' | 'scroll'>,
+      default: 'plain'
+    },
+    legendSetting: {
+      type: Object as PropType<LegendSetting>
+    },
+    tooltipVisible: {
+      type: Boolean,
+      default: true
+    },
+    tooltipTrigger: {
+      type: String as PropType<'item' | 'axis' | 'none'>,
+      default: 'item'
+    },
+    tooltipSetting: {
+      type: Object as PropType<TooltipSetting>
+    },
+    axisPointerVisible: {
+      type: Boolean,
+      default: true
+    },
+    axisPointerType: {
+      type: String as PropType<'line' | 'shadow' | 'none'>,
+      default: 'line'
+    },
+    axisPointerSetting: {
+      type: Object as PropType<AxisPointerSetting>
+    }
   }
 }
