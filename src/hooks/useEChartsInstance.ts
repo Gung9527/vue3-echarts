@@ -1,6 +1,6 @@
 import { ECharts } from 'echarts/core';
-import echartsCore from "@/config/echartsCore";
-import { EChartsInitOpts } from '@/typings/GridProps'
+import { echartsCore } from "@/config/echartsCore";
+import { EChartsInitOpts } from '@/typings/UniversalProps'
 
 type Instances = { [k: string]: ECharts }
 

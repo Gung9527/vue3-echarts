@@ -1,5 +1,5 @@
-import { ChartHandlerData } from '@/typings/UniversalProps'
+import { ChartHandlerArgs } from '@/typings/UniversalProps'
 
-export interface LineChartHandlerData extends ChartHandlerData {
+export interface LineChartHandlerArgs extends ChartHandlerArgs {
   
 }

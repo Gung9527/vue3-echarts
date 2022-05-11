@@ -14,13 +14,18 @@
     :metrics-alias="metricsAlias"
     tooltip-trigger="axis"
   ></v3-bar>
-  <button @click="height += 50">+</button>
-  <button @click="height -= 50">-</button>
+  <v3-pie 
+    :width="500"
+    :height="height" 
+    :data="seriesData"
+    tooltip-trigger="item"
+  ></v3-pie>
 </template>
 
 <script setup lang="ts">
 import v3Line from '@/components/charts/line'
 import v3Bar from '@/components/charts/bar'
+import v3Pie from '@/components/charts/pie'
 import { Data, MetricsAlias, TooltipSetting } from '@/typings/ChartsProps'
 import { ref } from 'vue';
 

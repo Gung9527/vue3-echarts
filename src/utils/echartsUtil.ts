@@ -1,5 +1,11 @@
 import { cloneDeep } from 'lodash-unified'
 import { XAxisSetting, YAxisSetting } from '@/typings/ChartsProps'
+import { echartsCore, alreadyUseCharts, alreadyUseComponents } from '@/config/echartsCore'
+
+type ComponentName = 
+  'GridSimpleComponent' |
+  'PolarComponent' |
+  'RadarComponent'
 
 function getCategoryAxis(dimensions: unknown[][], settings?: XAxisSetting | YAxisSetting | (XAxisSetting | YAxisSetting)[]) {
   const axis: unknown[] = []
@@ -21,7 +27,17 @@ function getCategoryAxis(dimensions: unknown[][], settings?: XAxisSetting | YAxi
   return axis
 }
 
+function registerComponent(name: ComponentName) {
+  if (!alreadyUseComponents.includes(name)) {
+    import('echarts/components').then((module) => {
+      echartsCore.use(module[name])
+      alreadyUseComponents.push(name)
+    })
+  }
+}
+
 
 export {
-  getCategoryAxis
+  getCategoryAxis,
+  registerComponent
 }

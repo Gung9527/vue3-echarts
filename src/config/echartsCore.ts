@@ -32,6 +32,12 @@ echarts.use([
   PieChart
 ])
 
+const alreadyUseComponents = [ 'AxisPointerComponent', 'TitleComponent', 'TooltipComponent', 'GridComponent' ]
+const alreadyUseCharts = [ 'BarChart', 'PieChart', 'LineChart' ]
 
 const echartsCore = echarts
-export default echartsCore
+export { 
+  echartsCore,
+  alreadyUseComponents,
+  alreadyUseCharts
+}

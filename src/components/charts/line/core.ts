@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash-unified'
-import type { LineChartHandlerData } from './interfaces'
+import type { LineChartHandlerArgs } from './interfaces'
 import type { SeriesOption, AxisPointerOption, TooltipOption, EChartsOption } from '../../../typings/ChartsProps'
 import { getCategoryAxis } from '../../../utils/echartsUtil'
 
@@ -8,7 +8,7 @@ interface Metrics {
 }
 
 
-function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerData['xAxisType'], axisSettings?: LineChartHandlerData['xAxisSettings']) {
+function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerArgs['xAxisType'], axisSettings?: LineChartHandlerArgs['xAxisSettings']) {
   switch (axisType) {
     case 'category':
       return getCategoryAxis([dimension], axisSettings)
@@ -19,7 +19,7 @@ function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerData
   }
 }
 
-function getYAxis(dimension: (string | number)[], axisType: LineChartHandlerData['yAxisType'], axisSettings?: LineChartHandlerData['yAxisSettings']) {
+function getYAxis(dimension: (string | number)[], axisType: LineChartHandlerArgs['yAxisType'], axisSettings?: LineChartHandlerArgs['yAxisSettings']) {
   switch (axisType) {
     case 'category':
       return getCategoryAxis([dimension], axisSettings)
@@ -34,7 +34,7 @@ function getLegend() {
 
 }
 
-function getTooltip(trigger: LineChartHandlerData['tooltipTrigger'], visible: boolean, setting?: LineChartHandlerData['tooltipSetting']) {
+function getTooltip(trigger: LineChartHandlerArgs['tooltipTrigger'], visible: boolean, setting?: LineChartHandlerArgs['tooltipSetting']) {
   if (!visible) {
     return {} as TooltipOption
   }
@@ -48,7 +48,7 @@ function getTooltip(trigger: LineChartHandlerData['tooltipTrigger'], visible: bo
   return tooltip
 }
 
-function getAxisPointer(type: LineChartHandlerData['axisPointerType'], visible: boolean, setting?: LineChartHandlerData['axisPointerSetting']) {
+function getAxisPointer(type: LineChartHandlerArgs['axisPointerType'], visible: boolean, setting?: LineChartHandlerArgs['axisPointerSetting']) {
   if (!visible) {
     return {} as AxisPointerOption
   }
@@ -62,7 +62,7 @@ function getAxisPointer(type: LineChartHandlerData['axisPointerType'], visible: 
   return axisPointer
 }
 
-function getSeries(metrics: Metrics, metricsAlias: LineChartHandlerData['metricsAlias']) {
+function getSeries(metrics: Metrics, metricsAlias: LineChartHandlerArgs['metricsAlias']) {
   const series: SeriesOption[] = []
   Object.keys(metrics).forEach((key, i) => {
     const tempSeries: SeriesOption = {
@@ -75,7 +75,7 @@ function getSeries(metrics: Metrics, metricsAlias: LineChartHandlerData['metrics
   return series
 }
 
-export default function(args: LineChartHandlerData) {
+export default function(args: LineChartHandlerArgs) {
   const { 
     data,
     dimensionIndex,

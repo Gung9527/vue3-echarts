@@ -17,7 +17,7 @@ export type EChartsInitOpts = {
   locale?: string
 }
 
-export type ChartHandlerData = {
+export type ChartHandlerArgs = {
   data: Data,
   dimensionIndex: number,
   metricsAlias?: MetricsAlias,
