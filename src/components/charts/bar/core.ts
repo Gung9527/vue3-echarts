@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash-unified'
-import type { LineChartHandlerData } from './interfaces'
-import type { SeriesOption, AxisPointerOption, TooltipOption, EChartsOption } from '../../../typings/ChartsProps'
+import { BarChartHandlerData } from './interfaces'
+import { SeriesOption, AxisPointerOption, TooltipOption, EChartsOption } from '../../../typings/ChartsProps'
 import { getCategoryAxis } from '../../../utils/echartsUtil'
 
 interface Metrics {
@@ -8,7 +8,7 @@ interface Metrics {
 }
 
 
-function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerData['xAxisType'], axisSettings?: LineChartHandlerData['xAxisSettings']) {
+function getXAxis(dimension: (string | number)[], axisType: BarChartHandlerData['xAxisType'], axisSettings?: BarChartHandlerData['xAxisSettings']) {
   switch (axisType) {
     case 'category':
       return getCategoryAxis([dimension], axisSettings)
@@ -19,7 +19,7 @@ function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerData
   }
 }
 
-function getYAxis(dimension: (string | number)[], axisType: LineChartHandlerData['yAxisType'], axisSettings?: LineChartHandlerData['yAxisSettings']) {
+function getYAxis(dimension: (string | number)[], axisType: BarChartHandlerData['yAxisType'], axisSettings?: BarChartHandlerData['yAxisSettings']) {
   switch (axisType) {
     case 'category':
       return getCategoryAxis([dimension], axisSettings)
@@ -34,7 +34,7 @@ function getLegend() {
 
 }
 
-function getTooltip(trigger: LineChartHandlerData['tooltipTrigger'], visible: boolean, setting?: LineChartHandlerData['tooltipSetting']) {
+function getTooltip(trigger: BarChartHandlerData['tooltipTrigger'], visible: boolean, setting?: BarChartHandlerData['tooltipSetting']) {
   if (!visible) {
     return {} as TooltipOption
   }
@@ -48,11 +48,11 @@ function getTooltip(trigger: LineChartHandlerData['tooltipTrigger'], visible: bo
   return tooltip
 }
 
-function getAxisPointer(type: LineChartHandlerData['axisPointerType'], visible: boolean, setting?: LineChartHandlerData['axisPointerSetting']) {
+function getAxisPointer(type: BarChartHandlerData['axisPointerType'], visible: boolean, setting?: BarChartHandlerData['axisPointerSetting']) {
   if (!visible) {
     return {} as AxisPointerOption
   }
-
+  
   const axisPointer: AxisPointerOption = {}
   axisPointer.type = type
   axisPointer.show = visible
@@ -62,11 +62,11 @@ function getAxisPointer(type: LineChartHandlerData['axisPointerType'], visible: 
   return axisPointer
 }
 
-function getSeries(metrics: Metrics, metricsAlias: LineChartHandlerData['metricsAlias']) {
+function getSeries(metrics: Metrics, metricsAlias: BarChartHandlerData['metricsAlias']) {
   const series: SeriesOption[] = []
   Object.keys(metrics).forEach((key, i) => {
     const tempSeries: SeriesOption = {
-      type: 'line',
+      type: 'bar',
       name: metricsAlias ? (metricsAlias[key] || key) : key,
       data: metrics[key]
     }
@@ -75,7 +75,7 @@ function getSeries(metrics: Metrics, metricsAlias: LineChartHandlerData['metrics
   return series
 }
 
-export default function(args: LineChartHandlerData) {
+export default function(args: BarChartHandlerData) {
   const { 
     data,
     dimensionIndex,

@@ -1,7 +1,9 @@
 import * as echarts from 'echarts/core'
 
 import {
-  LineChart
+  BarChart,
+  LineChart,
+  PieChart
 } from 'echarts/charts'
 
 import {
@@ -25,7 +27,9 @@ echarts.use([
   UniversalTransition,
   CanvasRenderer,
   SVGRenderer,
-  LineChart
+  LineChart,
+  BarChart,
+  PieChart
 ])
 
 

@@ -79,7 +79,7 @@ export default function () {
     },
     axisPointerVisible: {
       type: Boolean,
-      default: true
+      default: false
     },
     axisPointerType: {
       type: String as PropType<'line' | 'shadow' | 'none'>,
