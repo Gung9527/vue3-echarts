@@ -3,18 +3,17 @@
     :data="barData"
     :metrics-alias="metricsAlias"
     :tooltip-setting="tooltipSetting"
-    :y-axis-settings="yAxisSettings"
+    :y-axis-setting="yAxisSetting"
     :series-settings="seriesSettings"
     tooltip-trigger="axis"
   ></v3-bar> -->
-  <v3-grid>
+  <v3-grid
+    :x-axis-types="['category']"
+    :y-axis-types="['value', 'value']"
+  >
     <v3-bar
       :data="barData"
       :metrics-alias="metricsAlias"
-      :tooltip-setting="tooltipSetting"
-      :y-axis-settings="yAxisSettings"
-      :series-settings="seriesSettings"
-      tooltip-trigger="axis"
     ></v3-bar>
   </v3-grid>
 </template>
@@ -25,10 +24,11 @@ import v3Bar from '@/components/charts/bar'
 import { Data, MetricsAlias, TooltipSetting, YAxisSetting, BarSeriesOption } from '@/typings/ChartsProps'
 import { ref } from 'vue'
 
+
 const barData: Data = {
   columns: ['year', 'value'],
   rows: [
-    { year: '2013', value: 244420.85 },
+    { year: '2013', value: 244423.85 },
     { year: '2014', value: 245011.15 },
     { year: '2015', value: 245624.16 },
     { year: '2016', value: 246233.85 },
@@ -58,14 +58,14 @@ const tooltipSetting: TooltipSetting = {
   },
 }
 
-const yAxisSettings: YAxisSetting[] = [{
+const yAxisSetting: YAxisSetting = {
   min: 240000,
   max: 250000
-}]
+}
 
 const seriesSettings: BarSeriesOption[] = [
   {
-    barWidth: 10
+    barWidth: 15
   }
 ]
 const height = ref(300)

@@ -4,7 +4,10 @@ import {
   GridOption,
   LegendOption, 
   TooltipOption,
-  AxisPointerOption
+  AxisPointerOption,
+  LineSeriesOption,
+  PieSeriesOption,
+  BarSeriesOption
 } from 'echarts/types/dist/shared'
 
 export type Data = {
@@ -22,6 +25,8 @@ export type YAxisSetting = Omit<YAXisOption, 'data' | 'type'>
 
 export type GridSetting = GridOption
 
+export type SeriesSetting = LineSeriesOption | PieSeriesOption | BarSeriesOption
+
 export type LegendSetting = Omit<LegendOption, 'type' | 'show'>
 
 export type TooltipSetting = Omit<TooltipOption, 'show' | 'trigger'>
@@ -29,5 +34,7 @@ export type TooltipSetting = Omit<TooltipOption, 'show' | 'trigger'>
 export type AxisPointerSetting = Omit<AxisPointerOption, 'show' | 'type'>
 
 export type { SeriesOption, EChartsOption, AxisPointerOption, TooltipOption } from 'echarts/types/dist/shared'
+
+export type { XAXisOption, YAXisOption }
 
 export type { BarSeriesOption, LineSeriesOption, PieSeriesOption } from 'echarts/charts'

@@ -35,3 +35,14 @@ export type ChartHandlerArgs = {
   axisPointerType: 'line' | 'shadow' | 'none',
   axisPointerSetting?: AxisPointerSetting
 }
+
+export type Dimensions = {
+  [k: string]: unknown[]
+}
+
+export type Metrics = {
+  [k: string]: {
+    dimName: string,
+    data: (string | number)[]
+  }
+}

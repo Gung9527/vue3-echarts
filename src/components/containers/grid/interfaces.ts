@@ -15,13 +15,11 @@ type BaseType = Omit<
 
 export interface GridHandlerData extends BaseType {
   datas: {
-    [k in ChartType]?: {
-      data: Data,
-      index: number,
-      dimensionIndex: number,
-      metricsAlias?: MetricsAlias
-    }
-  },
+    type: ChartType,
+    data: Data,
+    dimensionIndex: number,
+    metricsAlias?: MetricsAlias
+  }[],
   xAxisTypes: AxisType[],
   xAxisSettings: XAxisSetting[],
   yAxisTypes: AxisType[],
