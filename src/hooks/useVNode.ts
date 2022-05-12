@@ -1,11 +1,11 @@
-import { ComputedRef, h, VNode } from 'vue'
+import { ComputedRef, h, VNode, Ref } from 'vue'
 
 interface SizeType {
   width: string,
   height: string
 }
 
-export default function(size: SizeType, className?: string, slots?: VNode[]) {
+export default function(size: SizeType, ref?: Ref<HTMLElement | undefined>, className?: string, slots?: VNode[]) {
   const containerClassName = `v3-echarts__${className || 'container'}`
 
   return h('div', {
@@ -13,7 +13,7 @@ export default function(size: SizeType, className?: string, slots?: VNode[]) {
     style: size
   }, [
     h('div', {
-      ref: 'chartRef',
+      ref: ref,
       class: `${containerClassName}--chart`,
       style: { width: '100%', height: '100%' }
     }),

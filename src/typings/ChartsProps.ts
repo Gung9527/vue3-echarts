@@ -29,3 +29,5 @@ export type TooltipSetting = Omit<TooltipOption, 'show' | 'trigger'>
 export type AxisPointerSetting = Omit<AxisPointerOption, 'show' | 'type'>
 
 export type { SeriesOption, EChartsOption, AxisPointerOption, TooltipOption } from 'echarts/types/dist/shared'
+
+export type { BarSeriesOption, LineSeriesOption, PieSeriesOption } from 'echarts/charts'

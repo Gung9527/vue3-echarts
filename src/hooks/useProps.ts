@@ -49,11 +49,11 @@ export default function () {
       type: String as PropType<AxisType>,
       default: 'value'
     },
-    xAxisSettings: {
-      type: Object as PropType<XAxisSetting | Array<XAxisSetting>>
+    xAxisSetting: {
+      type: Object as PropType<XAxisSetting>
     },
-    yAxisSettings: {
-      type: Object as PropType<YAxisSetting | Array<YAxisSetting>>
+    yAxisSetting: {
+      type: Object as PropType<YAxisSetting>
     },
     legendVisible: {
       type: Boolean,

@@ -1,50 +1,44 @@
 <template>
-  <v3-line 
-    :width="500" 
-    :height="height" 
-    :data="seriesData"
+  <!-- <v3-bar
+    :data="barData"
     :metrics-alias="metricsAlias"
     :tooltip-setting="tooltipSetting"
+    :y-axis-settings="yAxisSettings"
+    :series-settings="seriesSettings"
     tooltip-trigger="axis"
-  ></v3-line>
-  <v3-bar 
-    :width="500" 
-    :height="height" 
-    :data="seriesData"
-    :metrics-alias="metricsAlias"
-    tooltip-trigger="axis"
-  ></v3-bar>
-  <v3-pie 
-    :width="500"
-    :height="height" 
-    :data="seriesData"
-    tooltip-trigger="item"
-  ></v3-pie>
+  ></v3-bar> -->
+  <v3-grid>
+    <v3-bar
+      :data="barData"
+      :metrics-alias="metricsAlias"
+      :tooltip-setting="tooltipSetting"
+      :y-axis-settings="yAxisSettings"
+      :series-settings="seriesSettings"
+      tooltip-trigger="axis"
+    ></v3-bar>
+  </v3-grid>
 </template>
 
 <script setup lang="ts">
-import v3Line from '@/components/charts/line'
+import v3Grid from '@/components/containers/grid'
 import v3Bar from '@/components/charts/bar'
-import v3Pie from '@/components/charts/pie'
-import { Data, MetricsAlias, TooltipSetting } from '@/typings/ChartsProps'
-import { ref } from 'vue';
+import { Data, MetricsAlias, TooltipSetting, YAxisSetting, BarSeriesOption } from '@/typings/ChartsProps'
+import { ref } from 'vue'
 
-const seriesData: Data = {
-  columns: ['day', 'value1', 'value2'],
+const barData: Data = {
+  columns: ['year', 'value'],
   rows: [
-    { day: 'Mon', value1: 150, value2: 100 },
-    { day: 'Tue', value1: 230, value2: 100 },
-    { day: 'Wen', value1: 224, value2: 100 },
-    { day: 'Thu', value1: 218, value2: 100 },
-    { day: 'Fri', value1: 135, value2: 100 },
-    { day: 'Sat', value1: 147, value2: 100 },
-    { day: 'Sun', value1: 260, value2: 100 },
+    { year: '2013', value: 244420.85 },
+    { year: '2014', value: 245011.15 },
+    { year: '2015', value: 245624.16 },
+    { year: '2016', value: 246233.85 },
+    { year: '2017', value: 247314.02 },
+    { year: '2018', value: 248681.97 },
   ]
 }
 
 const metricsAlias: MetricsAlias = {
-  value1: '值1',
-  value2: '值2'
+  value: '年面积'
 }
 
 const tooltipSetting: TooltipSetting = {
@@ -63,6 +57,17 @@ const tooltipSetting: TooltipSetting = {
     return title + text
   },
 }
+
+const yAxisSettings: YAxisSetting[] = [{
+  min: 240000,
+  max: 250000
+}]
+
+const seriesSettings: BarSeriesOption[] = [
+  {
+    barWidth: 10
+  }
+]
 const height = ref(300)
 
 </script>

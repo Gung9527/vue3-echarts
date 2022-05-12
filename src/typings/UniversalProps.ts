@@ -23,8 +23,8 @@ export type ChartHandlerArgs = {
   metricsAlias?: MetricsAlias,
   xAxisType: AxisType,
   yAxisType: AxisType,
-  xAxisSettings?: XAxisSetting | Array<XAxisSetting>
-  yAxisSettings?: YAxisSetting | Array<YAxisSetting>
+  xAxisSetting?: XAxisSetting
+  yAxisSetting?: YAxisSetting
   legendVisible: boolean,
   legendType: 'plain' | 'scroll',
   legendSetting?: LegendSetting,

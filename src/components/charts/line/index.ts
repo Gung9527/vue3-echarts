@@ -10,17 +10,10 @@ export default defineComponent({
   }, useProps()),
 
   setup(props) {
-    const { chartRef, chartSizeStyle, option, ready } = useSetup(props, lineHandler)
+    const { chartRef, chartSizeStyle, inGrid } = useSetup(props, lineHandler)
 
-    return {
-      chartSizeStyle,
-      chartRef,
-      option,
-      ready
+    if (!inGrid) {
+      return () => useVNode(chartSizeStyle.value, chartRef, 'line')
     }
-  },
-
-  render() {
-    return useVNode(this.chartSizeStyle, 'line')
   }
 })

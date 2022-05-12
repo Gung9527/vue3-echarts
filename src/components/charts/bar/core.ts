@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash-unified'
 import { BarChartHandlerArgs } from './interfaces'
-import { SeriesOption, AxisPointerOption, TooltipOption, EChartsOption } from '../../../typings/ChartsProps'
+import { BarSeriesOption, AxisPointerOption, TooltipOption, EChartsOption } from '../../../typings/ChartsProps'
 import { getCategoryAxis } from '../../../utils/echartsUtil'
 
 interface Metrics {
@@ -8,25 +8,25 @@ interface Metrics {
 }
 
 
-function getXAxis(dimension: (string | number)[], axisType: BarChartHandlerArgs['xAxisType'], axisSettings?: BarChartHandlerArgs['xAxisSettings']) {
+function getXAxis(dimension: (string | number)[], axisType: BarChartHandlerArgs['xAxisType'], axisSettings?: BarChartHandlerArgs['xAxisSetting']) {
   switch (axisType) {
     case 'category':
       return getCategoryAxis([dimension], axisSettings)
     default:
-      return {
+      return Object.assign({
         type: axisType
-      }
+      }, cloneDeep(axisSettings))
   }
 }
 
-function getYAxis(dimension: (string | number)[], axisType: BarChartHandlerArgs['yAxisType'], axisSettings?: BarChartHandlerArgs['yAxisSettings']) {
+function getYAxis(dimension: (string | number)[], axisType: BarChartHandlerArgs['yAxisType'], axisSettings?: BarChartHandlerArgs['yAxisSetting']) {
   switch (axisType) {
     case 'category':
       return getCategoryAxis([dimension], axisSettings)
     default:
-      return {
+      return Object.assign({
         type: axisType
-      }
+      }, cloneDeep(axisSettings))
   }
 }
 
@@ -62,13 +62,16 @@ function getAxisPointer(type: BarChartHandlerArgs['axisPointerType'], visible: b
   return axisPointer
 }
 
-function getSeries(metrics: Metrics, metricsAlias: BarChartHandlerArgs['metricsAlias']) {
-  const series: SeriesOption[] = []
+function getSeries(metrics: Metrics, setting: BarChartHandlerArgs['seriesSettings'], metricsAlias: BarChartHandlerArgs['metricsAlias']) {
+  const series: BarSeriesOption[] = []
   Object.keys(metrics).forEach((key, i) => {
-    const tempSeries: SeriesOption = {
+    const tempSeries: BarSeriesOption = {
       type: 'bar',
       name: metricsAlias ? (metricsAlias[key] || key) : key,
       data: metrics[key]
+    }
+    if (Array.isArray(setting) && setting[i]) {
+      Object.assign(tempSeries, setting[i])
     }
     series.push(tempSeries)
   })
@@ -80,10 +83,11 @@ export default function(args: BarChartHandlerArgs) {
     data,
     dimensionIndex,
     metricsAlias,
+    seriesSettings,
     xAxisType,
-    xAxisSettings,
+    xAxisSetting,
     yAxisType,
-    yAxisSettings,
+    yAxisSetting,
     axisPointerVisible,
     axisPointerType,
     axisPointerSetting,
@@ -107,9 +111,9 @@ export default function(args: BarChartHandlerArgs) {
 
   const axisPointer = getAxisPointer(axisPointerType, axisPointerVisible, axisPointerSetting)
   const tooltip = getTooltip(tooltipTrigger, tooltipVisible, tooltipSetting)
-  const xAxis = getXAxis(dimension, xAxisType, xAxisSettings)
-  const yAxis = getYAxis(dimension, yAxisType, yAxisSettings)
-  const series = getSeries(metrics, metricsAlias)
+  const xAxis = getXAxis(dimension, xAxisType, xAxisSetting)
+  const yAxis = getYAxis(dimension, yAxisType, yAxisSetting)
+  const series = getSeries(metrics, seriesSettings, metricsAlias)
 
   return { axisPointer, tooltip, xAxis, yAxis, series } as EChartsOption
 }

@@ -8,25 +8,25 @@ interface Metrics {
 }
 
 
-function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerArgs['xAxisType'], axisSettings?: LineChartHandlerArgs['xAxisSettings']) {
+function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerArgs['xAxisType'], axisSettings?: LineChartHandlerArgs['xAxisSetting']) {
   switch (axisType) {
     case 'category':
       return getCategoryAxis([dimension], axisSettings)
     default:
-      return {
+      return Object.assign({
         type: axisType
-      }
+      }, cloneDeep(axisSettings))
   }
 }
 
-function getYAxis(dimension: (string | number)[], axisType: LineChartHandlerArgs['yAxisType'], axisSettings?: LineChartHandlerArgs['yAxisSettings']) {
+function getYAxis(dimension: (string | number)[], axisType: LineChartHandlerArgs['yAxisType'], axisSettings?: LineChartHandlerArgs['yAxisSetting']) {
   switch (axisType) {
     case 'category':
       return getCategoryAxis([dimension], axisSettings)
     default:
-      return {
+      return Object.assign({
         type: axisType
-      }
+      }, cloneDeep(axisSettings))
   }
 }
 
@@ -81,9 +81,9 @@ export default function(args: LineChartHandlerArgs) {
     dimensionIndex,
     metricsAlias,
     xAxisType,
-    xAxisSettings,
+    xAxisSetting,
     yAxisType,
-    yAxisSettings,
+    yAxisSetting,
     axisPointerVisible,
     axisPointerType,
     axisPointerSetting,
@@ -105,10 +105,11 @@ export default function(args: LineChartHandlerArgs) {
     }
   })
 
+
   const axisPointer = getAxisPointer(axisPointerType, axisPointerVisible, axisPointerSetting)
   const tooltip = getTooltip(tooltipTrigger, tooltipVisible, tooltipSetting)
-  const xAxis = getXAxis(dimension, xAxisType, xAxisSettings)
-  const yAxis = getYAxis(dimension, yAxisType, yAxisSettings)
+  const xAxis = getXAxis(dimension, xAxisType, xAxisSetting)
+  const yAxis = getYAxis(dimension, yAxisType, yAxisSetting)
   const series = getSeries(metrics, metricsAlias)
 
   return { axisPointer, tooltip, xAxis, yAxis, series } as EChartsOption
