@@ -7,10 +7,7 @@
     :series-settings="seriesSettings"
     tooltip-trigger="axis"
   ></v3-bar> -->
-  <v3-grid
-    :x-axis-types="['category']"
-    :y-axis-types="['value', 'value']"
-  >
+  <v3-grid>
     <v3-bar
       :data="barData"
       :metrics-alias="metricsAlias"
