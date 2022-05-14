@@ -1,27 +1,14 @@
+import { camelCase, paramCase } from 'change-case/dist.es2015'
+
 function randomId() {
   return Math.random().toString(36).substring(2)
 }
 
-function deepClone(obj?: any) {
-  if (!obj) {
-    return {}
-  }
-  let newObj: any
-  if (typeof obj === 'object' && obj) {
-    newObj = Array.isArray(obj) ? [] : {}
-    for (let key in obj) {
-      newObj[key] = deepClone(obj[key])
-    }
-  } else {
-    newObj = obj
-  }
-
-  return newObj
+function getValue(obj: any, key: string, defaultValue?: any) {
+  return obj[key] || obj[paramCase(key)] || obj[camelCase(key)] || defaultValue
 }
-
-
 
 export {
   randomId,
-  deepClone
+  getValue
 }

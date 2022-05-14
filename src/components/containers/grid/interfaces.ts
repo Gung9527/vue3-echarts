@@ -18,6 +18,8 @@ export interface GridHandlerData extends BaseType {
     type: ChartType,
     data: Data,
     dimensionIndex: number,
+    xAxisIndex: 0 | 1,
+    yAxisIndex: 0 | 1,
     metricsAlias?: MetricsAlias
   }[],
   xAxisTypes: AxisType[],

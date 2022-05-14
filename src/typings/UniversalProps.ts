@@ -43,6 +43,8 @@ export type Dimensions = {
 export type Metrics = {
   [k: string]: {
     dimName: string,
-    data: (string | number)[]
+    data: (string | number)[],
+    xAxisIndex: 0 | 1,
+    yAxisIndex: 0 | 1
   }
 }

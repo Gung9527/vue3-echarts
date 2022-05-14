@@ -1,6 +1,6 @@
 import { GridHandlerData } from './interfaces'
-import { getAxes, getSeries } from '@/utils/echartsUtil'
-import { MetricsAlias, SeriesSetting } from '@/typings/ChartsProps'
+import { getAxis, getSeries } from '@/utils/echartsUtil'
+import { MetricsAlias, GridSeriesSetting, XAXisOption, YAXisOption, EChartsOption } from '@/typings/ChartsProps'
 import { Dimensions, Metrics } from '@/typings/UniversalProps'
 
 interface GetGridAxesArgs {
@@ -12,7 +12,7 @@ interface GetGridAxesArgs {
 function getArgs(datas: GridHandlerData['datas']) {
   const dimensions: Dimensions = {}
   const metrics: Metrics = {}
-  const seriesSettings: SeriesSetting[] = [] 
+  const seriesSettings: GridSeriesSetting[] = [] 
   datas.forEach((d) => {
     const data = d.data
     const metricsAlias = d.metricsAlias
@@ -28,16 +28,19 @@ function getArgs(datas: GridHandlerData['datas']) {
           dimensions[col] = data.rows.map((row) => row[col])
         }
       } else {
-        metrics[metricsAlias ? metricsAlias[col] || col : col] = {
+        metrics[metricsAlias ? metricsAlias[col] || `${d.type}_${col}` : `${d.type}_${col}`] = {
           dimName,
+          xAxisIndex: d.xAxisIndex,
+          yAxisIndex: d.yAxisIndex,
           data: data.rows.map((row) => row[col])
         }
+        seriesSettings.push({
+          type: d.type
+        })
       }
     })
 
-    seriesSettings.push({
-      type: d.type
-    })
+    
   })
 
   return { dimensions, metrics, seriesSettings }
@@ -46,11 +49,17 @@ function getArgs(datas: GridHandlerData['datas']) {
 function getGridAxes(args: GetGridAxesArgs) {
   const { dimensions, types, settings } = args
   const _dimensions = Object.keys(dimensions).map((d) => dimensions[d])
-  return getAxes(
-    _dimensions,
-    types,
-    settings
-  )
+  const axes: (XAXisOption | YAXisOption)[] = []
+  
+  types.forEach((type, i) => {
+    if (type === 'category') {
+      _dimensions[i] && axes.push(getAxis(type, _dimensions[i], settings[i]))
+    } else {
+      axes.push(getAxis(type, undefined, settings[i]))
+    }
+  })
+
+  return axes
 }
 
 
@@ -64,9 +73,10 @@ export default function(args: GridHandlerData) {
   } = args
 
   const { dimensions, metrics, seriesSettings } = getArgs(datas)
+  
   const xAxis = getGridAxes({ dimensions, types: xAxisTypes, settings: xAxisSettings })
   const yAxis = getGridAxes({ dimensions, types: yAxisTypes, settings: yAxisSettings })
   const series = getSeries(metrics, seriesSettings)
 
-  console.log({ xAxis, yAxis, series })
+  return { xAxis, yAxis, series } as EChartsOption
 }

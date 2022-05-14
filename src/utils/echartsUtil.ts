@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash-unified'
-import { AxisType, MetricsAlias, XAxisSetting, YAxisSetting, SeriesSetting } from '@/typings/ChartsProps'
+import { AxisType, MetricsAlias, XAxisSetting, YAxisSetting, GridSeriesSetting } from '@/typings/ChartsProps'
 import { Dimensions, Metrics } from '@/typings/UniversalProps'
 import { echartsCore, alreadyUseCharts, alreadyUseComponents } from '@/config/echartsCore'
 
@@ -38,31 +38,21 @@ function getCategoryAxis(dimensions: unknown[][], settings?: XAxisSetting | YAxi
   return axis
 }
 
-function getAxis(dimensions: unknown[], type: AxisType, setting?: XAxisSetting | YAxisSetting) {
+function getAxis(type: AxisType, dimension?: unknown[], setting?: XAxisSetting | YAxisSetting) {
   const axis: any = { type }
-  switch (type) {
-    case 'category':
-      axis.data = dimensions
-      break
-    default:
-      break
+
+  if (type === 'category') {
+    if (!dimension) {
+      console.error('dimension must defined when type is \'category\'')
+      return
+    }
+    axis.data = dimension
   }
+
   return setting ? Object.assign(axis, cloneDeep(setting)) : axis
 }
 
-function getAxes(dimensions: unknown[][], types: AxisType[], setting?: (XAxisSetting | YAxisSetting)[]) {
-  if (dimensions.length !== types.length) {
-    console.error('dimensions length should matches types length')
-    return
-  }
-
-  const axes: any[] = dimensions.map((d, i) => {
-    return getAxis(d, types[i], setting?.[i])
-  })
-  return axes
-}
-
-function getSeries(metrics: Metrics, settings: SeriesSetting[]) {
+function getSeries(metrics: Metrics, settings: GridSeriesSetting[]) {
   const seriesNames = Object.keys(metrics)
   if (seriesNames.length !== settings.length) {
     console.error('metrics length should matches settings length')
@@ -73,13 +63,14 @@ function getSeries(metrics: Metrics, settings: SeriesSetting[]) {
     const setting = cloneDeep(settings[i])
     setting.name = name
     setting.data = metrics[name].data
+    setting.xAxisIndex = metrics[name].xAxisIndex || 0
+    setting.yAxisIndex = metrics[name].yAxisIndex || 0
     return setting
   })
 }
 
 export {
   getAxis,
-  getAxes,
   getSeries,
   getCategoryAxis,
   registerComponent

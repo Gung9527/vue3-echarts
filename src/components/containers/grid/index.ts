@@ -1,6 +1,7 @@
-import { computed, defineComponent, onMounted, provide, reactive, PropType, Component } from 'vue'
+import { computed, defineComponent, onMounted, provide, reactive, toRaw, watch } from 'vue'
 import { GridHandlerData } from './interfaces'
-import { SeriesOption } from '@/typings/ChartsProps'
+import { getValue } from '@/utils'
+import { SeriesOption, EChartsOption } from '@/typings/ChartsProps'
 import { useEChartsInstance, useProps, useVNode, useSetup } from '@/hooks'
 import gridHandler from './core'
 import v3Bar from '../../charts/bar'
@@ -21,6 +22,14 @@ const {
   axisPointerType,
   axisPointerSetting
 } = useProps()
+
+interface Args {
+  datas: GridHandlerData['datas'],
+  xAxisTypes: GridHandlerData['xAxisTypes'],
+  yAxisTypes: GridHandlerData['yAxisTypes'],
+  xAxisSettings: GridHandlerData['xAxisSettings'],
+  yAxisSettings: GridHandlerData['yAxisSettings']
+}
 
 export default defineComponent({
   name: 'v3-grid',
@@ -46,22 +55,22 @@ export default defineComponent({
     const { chartRef, chartSizeStyle } = useSetup(props)
     const { getInstance } = useEChartsInstance()
     
-    const datas = reactive<GridHandlerData['datas']>([])
-    const xAxisTypes = reactive<GridHandlerData['xAxisTypes']>([])
-    const yAxisTypes = reactive<GridHandlerData['yAxisTypes']>([])
-    const xAxisSettings = reactive<GridHandlerData['xAxisSettings']>([])
-    const yAxisSettings = reactive<GridHandlerData['yAxisSettings']>([])
 
+    const args = reactive<Args>({
+      datas: [],
+      xAxisTypes: [],
+      yAxisTypes: [],
+      xAxisSettings: [],
+      yAxisSettings: []
+    })
+
+    watch(args, () => {
+      const option = gridHandler(Object.assign(toRaw(args), props) as GridHandlerData)
+      initChart(option)
+    })
 
     onMounted(() => {
       getArgsFromChildren()
-      gridHandler(Object.assign({ 
-        datas,
-        xAxisTypes,
-        yAxisTypes,
-        xAxisSettings,
-        yAxisSettings
-      }, props) as GridHandlerData)
     })
 
     function getArgsFromChildren() {
@@ -72,21 +81,33 @@ export default defineComponent({
             if (child.type === v3Bar || child.type === v3Line) {
               const key = child.type.name!.replace('v3-', '')
               if (key === 'bar' || key === 'line') {
-                datas.push({
+                args.datas.push({
                   type: key,
-                  data: child.props?.data,
-                  dimensionIndex: child.props?.dimensionIndex,
-                  metricsAlias: child.props?.metricsAlias
+                  data: getValue(child.props, 'data'),
+                  dimensionIndex: getValue(child.props, 'dimensionIndex', 0),
+                  xAxisIndex: getValue(child.props, 'xAxisIndex', 0),
+                  yAxisIndex: getValue(child.props, 'yAxisIndex', 0),
+                  metricsAlias: getValue(child.props, 'metricsAlias')
                 })
 
-                xAxisTypes.push(child.props?.xAxisType || 'category')
-                yAxisTypes.push(child.props?.yAxisType || 'value')
-                child.props?.xAxisSetting && xAxisSettings.push(child.props?.xAxisSetting)
-                child.props?.yAxisSetting && yAxisSettings.push(child.props?.yAxisSetting)
+                args.xAxisTypes.push(getValue(child.props, 'xAxisType', 'category'))
+                args.yAxisTypes.push(getValue(child.props, 'yAxisType', 'value'))
+
+                const xAxisSetting = getValue(child.props, 'xAxisSetting')
+                const yAxisSetting = getValue(child.props, 'yAxisSetting')
+                xAxisSetting && args.xAxisSettings.push(xAxisSetting)
+                yAxisSetting && args.yAxisSettings.push(yAxisSetting)
               }
             }
           }
         })
+      }
+    }
+
+    function initChart(option: EChartsOption) {
+      const ec = getInstance(props.id)
+      if (ec) {
+        ec.setOption(option)
       }
     }
 

@@ -25,7 +25,7 @@ export type YAxisSetting = Omit<YAXisOption, 'data' | 'type'>
 
 export type GridSetting = GridOption
 
-export type SeriesSetting = LineSeriesOption | PieSeriesOption | BarSeriesOption
+export type GridSeriesSetting = LineSeriesOption | BarSeriesOption
 
 export type LegendSetting = Omit<LegendOption, 'type' | 'show'>
 

@@ -1,5 +1,6 @@
-import { randomId } from './commonUtils'
+import { randomId, getValue } from './commonUtils'
 
 export {
-  randomId
+  randomId,
+  getValue
 }

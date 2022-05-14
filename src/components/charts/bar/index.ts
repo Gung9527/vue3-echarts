@@ -1,4 +1,4 @@
-import { defineComponent, PropType, inject } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { useSetup, useVNode, useProps } from '@/hooks'
 import { BarChartHandlerArgs } from './interfaces'
 import barHandler from './core'

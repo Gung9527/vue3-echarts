@@ -55,6 +55,14 @@ export default function () {
     yAxisSetting: {
       type: Object as PropType<YAxisSetting>
     },
+    xAxisIndex: {
+      type: Number as PropType<0 | 1>,
+      default: 0
+    },
+    yAxisIndex: {
+      type: Number as PropType<0 | 1>,
+      default: 0
+    },
     legendVisible: {
       type: Boolean,
       default: true
