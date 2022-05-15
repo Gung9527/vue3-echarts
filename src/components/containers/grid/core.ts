@@ -1,7 +1,11 @@
 import { GridHandlerData } from './interfaces'
-import { getAxis, getSeries } from '@/utils/echartsUtil'
-import { MetricsAlias, GridSeriesSetting, XAXisOption, YAXisOption, EChartsOption } from '@/typings/ChartsProps'
-import { Dimensions, Metrics } from '@/typings/UniversalProps'
+import { 
+  getAxis,
+  getSeries,
+  getLegend,
+  getTooltip
+} from '@/utils'
+import { Dimensions, Metrics, MetricsAlias, GridSeriesSetting, XAXisOption, YAXisOption, EChartsOption } from '@/typings'
 
 interface GetGridAxesArgs {
   dimensions: Dimensions,
@@ -69,14 +73,24 @@ export default function(args: GridHandlerData) {
     xAxisTypes,
     yAxisTypes,
     xAxisSettings,
-    yAxisSettings
+    yAxisSettings,
+    legendType,
+    legendVisible,
+    legendSetting,
+    tooltipTrigger,
+    tooltipVisible,
+    tooltipSetting
   } = args
 
   const { dimensions, metrics, seriesSettings } = getArgs(datas)
   
   const xAxis = getGridAxes({ dimensions, types: xAxisTypes, settings: xAxisSettings })
   const yAxis = getGridAxes({ dimensions, types: yAxisTypes, settings: yAxisSettings })
+  const legend = getLegend(legendType, legendVisible, legendSetting)
+  const tooltip = getTooltip(tooltipTrigger, tooltipVisible, tooltipSetting)
   const series = getSeries(metrics, seriesSettings)
 
-  return { xAxis, yAxis, series } as EChartsOption
+  const options = { legend, tooltip, xAxis, yAxis, series } as EChartsOption
+  console.log(options)
+  return options
 }

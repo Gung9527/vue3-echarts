@@ -25,15 +25,15 @@ export type YAxisSetting = Omit<YAXisOption, 'data' | 'type'>
 
 export type GridSetting = GridOption
 
-export type GridSeriesSetting = LineSeriesOption | BarSeriesOption
+export type GridSeriesSetting = LineSeriesOption | BarSeriesOption | PieSeriesOption
 
-export type LegendSetting = Omit<LegendOption, 'type' | 'show'>
+export type LegendSetting = LegendOption
 
-export type TooltipSetting = Omit<TooltipOption, 'show' | 'trigger'>
+export type TooltipSetting = TooltipOption
 
-export type AxisPointerSetting = Omit<AxisPointerOption, 'show' | 'type'>
+export type AxisPointerSetting = AxisPointerOption
 
-export type { SeriesOption, EChartsOption, AxisPointerOption, TooltipOption } from 'echarts/types/dist/shared'
+export type { SeriesOption, EChartsOption, AxisPointerOption, TooltipOption, LegendOption } from 'echarts/types/dist/shared'
 
 export type { XAXisOption, YAXisOption }
 

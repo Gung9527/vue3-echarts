@@ -1,6 +1,2 @@
-import { randomId, getValue } from './commonUtils'
-
-export {
-  randomId,
-  getValue
-}
+export * from './commonUtils'
+export * from './echartsUtil'

@@ -1,50 +1,54 @@
-import { cloneDeep } from 'lodash-unified'
 import { PieChartHandlerArgs } from './interfaces'
-import { SeriesOption, TooltipOption, EChartsOption } from '../../../typings/ChartsProps'
+import { EChartsOption } from 'echarts'
+import { 
+  getDimensionsAndMetrics,
+  getAxis,
+  getAxisPointer,
+  getLegend,
+  getSeries,
+  getTooltip
+} from '@/utils'
+import { Data, GridSeriesSetting, PieSeriesOption } from '@/typings'
 
-function getLegend() {
-
-}
-
-function getTooltip(trigger: PieChartHandlerArgs['tooltipTrigger'], visible: boolean, setting: PieChartHandlerArgs['tooltipSetting']) {
-  const tooltip: TooltipOption = {
-    show: visible
+function getPieSeries(data: Data) {
+  if (data.columns.length < 2) {
+    console.error('data columns amount should be 2 while using pie chart')
+    return {}
   }
-  if (visible) {
-    tooltip.trigger = trigger
-    tooltip.show = true
-    if (setting) {
-      Object.assign(tooltip, cloneDeep(setting))
-    }
-  }
-  return tooltip
-}
 
-function getSeries(data: PieChartHandlerArgs['data'], metricsAlias: PieChartHandlerArgs['metricsAlias']) {
-  // default dimension index is 0, metrics index is 1
-  const { columns, rows } = data
-  const dimensionName = columns[0]
-  const metircsName = metricsAlias ? (metricsAlias[columns[1]] || columns[1]) : columns[1] 
-  const series: SeriesOption = {
+  const series: PieSeriesOption = {
     type: 'pie',
-    name: metircsName,
-    data: rows.map((row) => ({ value: row[columns[1]] as number, name: row[dimensionName] }))
+    data: []
   }
+  data.rows.forEach((row, i) => {
+    series.data?.push({
+      name: row[data.columns[0]] as string,
+      value: row[data.columns[1]] as number
+    })
+  })
 
   return series
 }
 
 export default function(args: PieChartHandlerArgs) {
-  const {
+  const { 
     data,
     metricsAlias,
-    tooltipTrigger,
+    seriesSettings,
+    legendType,
+    legendVisible,
+    legendSetting,
     tooltipVisible,
+    tooltipTrigger,
     tooltipSetting
   } = args
 
-  const series = getSeries(data, metricsAlias)
-  const tooltip = getTooltip(tooltipTrigger, tooltipVisible, tooltipSetting)
 
-  return { tooltip, series } as EChartsOption
+  const tooltip = getTooltip(tooltipTrigger, tooltipVisible, tooltipSetting)
+  const legend = getLegend(legendType, legendVisible, legendSetting)
+
+  const series = getPieSeries(data)
+
+  const option = { tooltip, legend, series } as EChartsOption
+  return option
 }

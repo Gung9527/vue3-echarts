@@ -6,8 +6,9 @@ import {
   YAxisSetting,
   LegendSetting,
   TooltipSetting,
-  AxisPointerSetting
-} from '@/typings/ChartsProps'
+  AxisPointerSetting,
+  GridSetting
+} from './ChartsProps'
 
 export type EChartsInitOpts = {
   devicePixelRatio?: number,
@@ -33,7 +34,8 @@ export type ChartHandlerArgs = {
   tooltipSetting?: TooltipSetting,
   axisPointerVisible: boolean,
   axisPointerType: 'line' | 'shadow' | 'none',
-  axisPointerSetting?: AxisPointerSetting
+  axisPointerSetting?: AxisPointerSetting,
+  gridSetting?: GridSetting
 }
 
 export type Dimensions = {

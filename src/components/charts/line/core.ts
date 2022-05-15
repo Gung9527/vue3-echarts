@@ -1,116 +1,57 @@
-import { cloneDeep } from 'lodash-unified'
-import type { LineChartHandlerArgs } from './interfaces'
-import type { SeriesOption, AxisPointerOption, TooltipOption, EChartsOption } from '../../../typings/ChartsProps'
-import { getCategoryAxis } from '../../../utils/echartsUtil'
-
-interface Metrics {
-  [k: string]: (string | number)[]
-}
-
-
-function getXAxis(dimension: (string | number)[], axisType: LineChartHandlerArgs['xAxisType'], axisSettings?: LineChartHandlerArgs['xAxisSetting']) {
-  switch (axisType) {
-    case 'category':
-      return getCategoryAxis([dimension], axisSettings)
-    default:
-      return Object.assign({
-        type: axisType
-      }, cloneDeep(axisSettings))
-  }
-}
-
-function getYAxis(dimension: (string | number)[], axisType: LineChartHandlerArgs['yAxisType'], axisSettings?: LineChartHandlerArgs['yAxisSetting']) {
-  switch (axisType) {
-    case 'category':
-      return getCategoryAxis([dimension], axisSettings)
-    default:
-      return Object.assign({
-        type: axisType
-      }, cloneDeep(axisSettings))
-  }
-}
-
-function getLegend() {
-
-}
-
-function getTooltip(trigger: LineChartHandlerArgs['tooltipTrigger'], visible: boolean, setting?: LineChartHandlerArgs['tooltipSetting']) {
-  if (!visible) {
-    return {} as TooltipOption
-  }
-
-  const tooltip: TooltipOption = {}
-  tooltip.trigger = trigger
-  tooltip.show = true
-  if (setting) {
-    Object.assign(tooltip, cloneDeep(setting))
-  }
-  return tooltip
-}
-
-function getAxisPointer(type: LineChartHandlerArgs['axisPointerType'], visible: boolean, setting?: LineChartHandlerArgs['axisPointerSetting']) {
-  if (!visible) {
-    return {} as AxisPointerOption
-  }
-
-  const axisPointer: AxisPointerOption = {}
-  axisPointer.type = type
-  axisPointer.show = visible
-  if (setting) {
-    Object.assign(axisPointer, cloneDeep(setting))
-  }
-  return axisPointer
-}
-
-function getSeries(metrics: Metrics, metricsAlias: LineChartHandlerArgs['metricsAlias']) {
-  const series: SeriesOption[] = []
-  Object.keys(metrics).forEach((key, i) => {
-    const tempSeries: SeriesOption = {
-      type: 'line',
-      name: metricsAlias ? (metricsAlias[key] || key) : key,
-      data: metrics[key]
-    }
-    series.push(tempSeries)
-  })
-  return series
-}
+import { LineChartHandlerArgs } from './interfaces'
+import { EChartsOption } from 'echarts'
+import { 
+  getDimensionsAndMetrics,
+  getAxis,
+  getAxisPointer,
+  getLegend,
+  getSeries,
+  getTooltip
+} from '../../../utils'
+import { GridSeriesSetting } from '../../../typings'
 
 export default function(args: LineChartHandlerArgs) {
   const { 
     data,
     dimensionIndex,
     metricsAlias,
+    seriesSettings,
     xAxisType,
     xAxisSetting,
     yAxisType,
     yAxisSetting,
+    legendType,
+    legendVisible,
+    legendSetting,
     axisPointerVisible,
     axisPointerType,
     axisPointerSetting,
     tooltipVisible,
     tooltipTrigger,
-    tooltipSetting
+    tooltipSetting,
+    gridSetting
   } = args
 
-  const _dimensionIndex = dimensionIndex || 0
-
-  const dimension = data.rows.map((row) => {
-    return row[data.columns[_dimensionIndex]]
-  })
-
-  const metrics: Metrics = {}
-  data.columns.forEach((col, i) => {
-    if (i !== _dimensionIndex) {
-      metrics[col] = data.rows.map((row) => row[col])
-    }
-  })
-
+  const { dimensions, metrics } = getDimensionsAndMetrics(data, dimensionIndex, metricsAlias)
+  const dimensionData = dimensions[data.columns[dimensionIndex]]
 
   const axisPointer = getAxisPointer(axisPointerType, axisPointerVisible, axisPointerSetting)
   const tooltip = getTooltip(tooltipTrigger, tooltipVisible, tooltipSetting)
-  const xAxis = getXAxis(dimension, xAxisType, xAxisSetting)
-  const yAxis = getYAxis(dimension, yAxisType, yAxisSetting)
-  const series = getSeries(metrics, metricsAlias)
+  const legend = getLegend(legendType, legendVisible, legendSetting)
+  const xAxis = getAxis(xAxisType, dimensionData, xAxisSetting)
+  const yAxis = getAxis(yAxisType, dimensionData, yAxisSetting)
 
-  return { axisPointer, tooltip, xAxis, yAxis, series } as EChartsOption
+  let series: GridSeriesSetting[] = []
+  if (seriesSettings) {
+    seriesSettings.forEach((setting) => setting.type = 'line')
+    series = getSeries(metrics, seriesSettings)!
+  } else {
+    series = getSeries(metrics, [{ type: 'line' }])!
+  }
+
+  const option = { axisPointer, tooltip, legend, xAxis, yAxis, series } as EChartsOption
+  if (gridSetting) {
+    option.grid = gridSetting
+  }
+  return option
 }

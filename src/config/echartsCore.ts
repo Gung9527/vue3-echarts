@@ -7,6 +7,7 @@ import {
 } from 'echarts/charts'
 
 import {
+  LegendComponent,
   AxisPointerComponent,
   TitleComponent,
   TooltipComponent,
@@ -20,6 +21,7 @@ import { CanvasRenderer, SVGRenderer } from 'echarts/renderers'
 
 echarts.use([
   AxisPointerComponent,
+  LegendComponent,
   TitleComponent,
   TooltipComponent,
   GridComponent,

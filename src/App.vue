@@ -1,13 +1,21 @@
 <template>
-  <!-- <v3-bar
+  <v3-bar
     :data="barData"
     :metrics-alias="metricsAlias"
-    :x-axis-setting="xAxisSetting"
-    :y-axis-type="'category'"
-    :x-axis-type="'value'"
-    :series-settings="seriesSettings"
+    :grid-setting="{
+      left: '4%'
+    }"
     tooltip-trigger="axis"
-  ></v3-bar> -->
+  ></v3-bar>
+  <v3-line
+    :data="lineData"
+    :metrics-alias="metricsAlias"
+    tooltip-trigger="axis"
+  ></v3-line>
+  <v3-pie
+    :data="barData"
+    :metrics-alias="metricsAlias"
+  ></v3-pie>
   <v3-grid>
     <v3-bar
       :data="barData"
@@ -21,6 +29,7 @@
 import v3Grid from '@/components/containers/grid'
 import v3Bar from '@/components/charts/bar'
 import v3Line from '@/components/charts/line'
+import v3Pie from '@/components/charts/pie'
 import { Data, MetricsAlias, TooltipSetting, XAxisSetting, BarSeriesOption } from '@/typings/ChartsProps'
 import { ref } from 'vue'
 
@@ -28,12 +37,12 @@ import { ref } from 'vue'
 const barData: Data = {
   columns: ['year', 'value'],
   rows: [
-    { year: '2013', value: 244423.85 },
-    { year: '2014', value: 245011.15 },
-    { year: '2015', value: 245624.16 },
-    { year: '2016', value: 246233.85 },
-    { year: '2017', value: 247314.02 },
-    { year: '2018', value: 248681.97 },
+    { year: '2013', value: 1 },
+    { year: '2014', value: 2 },
+    { year: '2015', value: 3 },
+    { year: '2016', value: 4 },
+    { year: '2017', value: 5 },
+    { year: '2018', value: 6 },
   ]
 }
 
